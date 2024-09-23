@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 
 import boto3
@@ -41,7 +42,7 @@ def send_email(ses_client: any, note_metadata: Row, note_content: str):
         }
     )
 
-    print("RESPONSE", response)
+    print("[ses] response:", response)
 
 def main():
     with open(DATABASE_PATH, 'r') as f:
@@ -52,6 +53,12 @@ def main():
 
     for (db_idx, job_idx) in idxs:
         note_metadata = db_rw[db_idx]
+
+        # verify the note exists
+        if not os.path.exists(note_metadata['absolute_path']):
+            db_rw[db_idx]['jobs'][job_idx]['status'] = Status.FAILED_ENOENT
+            continue
+
         with open(note_metadata['absolute_path'], 'r') as f:
             note_content = f.read()
 
@@ -61,7 +68,7 @@ def main():
             db_rw[db_idx]['jobs'][job_idx]['status'] = Status.COMPLETED
         except Exception as e:
             print("Failed to send email", e)
-            db_rw[db_idx]['jobs'][job_idx]['status'] = Status.FAILED
+            db_rw[db_idx]['jobs'][job_idx]['status'] = Status.FAILED_SES_SERVICE
 
     with open(DATABASE_PATH, 'w') as f:
         json.dump(db_rw, f, indent=4)

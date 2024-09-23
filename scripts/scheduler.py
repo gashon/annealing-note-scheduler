@@ -17,7 +17,8 @@ DATABASE_PATH = os.path.join(PARENT_DIR, 'database.json')
 class Status(StrEnum):
     PENDING = "PENDING"
     COMPLETED = "COMPLETED"
-    FAILED = "FAILED"
+    FAILED_ENOENT = "FAILED_ENOENT"
+    FAILED_SES_SERVICE= "FAILED_SES_SERVICE"
 
 class Row(TypedDict):
     note_id: str
