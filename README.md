@@ -1,6 +1,6 @@
 # Annealing Note Scheduler
 
-System to email a copy of markdown notes on an annealing schedule to combat forgetting curves.
+System to email a copy of markdown notes on an annealing schedule to combat the [forgetting curve](https://en.wikipedia.org/wiki/Forgetting_curve).
 
 Use a cronjob to frequently "schedule" jobs, adding them to the db if not already present for scheduling.
 
