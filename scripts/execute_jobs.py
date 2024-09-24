@@ -27,6 +27,7 @@ def get_todays_jobs(db_rw: DB) -> list[tuple[int, int]]:
 
 def send_email(ses_client: any, note_metadata: Row, note_content: str): 
     html_content = markdown.markdown(note_content)
+
     response = ses_client.send_email(
         Source=SENDER_EMAIL,
         Destination={
@@ -38,7 +39,10 @@ def send_email(ses_client: any, note_metadata: Row, note_content: str):
             },
             'Body': {
                 'Text': {
-                    'Data': html_content
+                    'Data': note_content  
+                },
+                'Html': {
+                    'Data': html_content 
                 }
             }
         }
