@@ -11,7 +11,8 @@ from enum import StrEnum
 from typing import TypedDict
 
 PARENT_DIR = os.path.dirname(os.path.dirname(__file__))
-VAULTS_PATH = os.path.join(PARENT_DIR, 'vaults')
+ROOT_DIR = os.path.dirname(os.path.dirname(PARENT_DIR))
+VAULTS_PATH = os.path.join(ROOT_DIR, 'notes', 'vaults')
 DATABASE_PATH = os.path.join(PARENT_DIR, 'database.json')
 
 class Status(StrEnum):
@@ -73,11 +74,11 @@ def get_note_filepaths() -> list[dict]:
                     absolute_path = os.path.join(root, file)
                     relative_path = os.path.relpath(absolute_path, VAULTS_PATH)
                     parent_dirs = os.path.dirname(relative_path).split(os.sep)
-                    
+
                     parent_dirs = [d for d in parent_dirs if d]
 
                     note_filepaths.append({"absolute_path": absolute_path, "parent_dirs": parent_dirs})
-    
+
     recurse_directory(VAULTS_PATH)
     return note_filepaths
 
