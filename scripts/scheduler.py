@@ -35,10 +35,18 @@ def note_is_scheduled(note_path: str, db_ro: DB) -> bool:
 
     return False
 
+def note_is_blacklisted(note_path: str) -> bool:
+    blacklist_names = ['todo']
+
+    if any(name in note_path for name in blacklist_names):
+        return True
+
+    return False
+
 def schedule_jobs(note_path: dict[str], db_rw: DB) -> DB:
     note_id = note_path["absolute_path"].split('/')[-1].split('.')[0]
 
-    if note_is_scheduled(note_path["absolute_path"], db_rw):
+    if note_is_scheduled(note_path["absolute_path"], db_rw) and not note_is_blacklisted(note_path["absolute_path"]):
         return db_rw
 
     today = datetime.date.today()
